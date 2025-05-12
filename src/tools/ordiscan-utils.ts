@@ -19,3 +19,11 @@ export const flexibleEnum = <T extends readonly string[]>(values: T) =>
   z.string().optional().refine(val => !val || values.includes(val as T[number]), {
     message: `Value must be one of: ${values.join(', ')}`
   }); 
+
+// Add a default export that includes all utility functions
+const utils = {
+  flexibleNumber,
+  flexibleEnum
+};
+
+export default utils; 

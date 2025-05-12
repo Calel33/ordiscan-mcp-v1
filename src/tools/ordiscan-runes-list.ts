@@ -1,6 +1,8 @@
 import { MCPTool } from "mcp-framework";
+import { flexibleNumber, flexibleEnum } from "./ordiscan-utils.js";
+
 import { z } from "zod";
-import { flexibleNumber, flexibleEnum } from "./ordiscan-utils";
+import utils from "./ordiscan-utils.js";
 
 interface RuneInfo {
   id: string;

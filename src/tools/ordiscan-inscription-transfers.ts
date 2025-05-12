@@ -1,7 +1,7 @@
 import { MCPTool } from "mcp-framework";
-import { z } from "zod";
-import { flexibleNumber } from "./ordiscan-utils";
+import { flexibleNumber, flexibleEnum } from "./ordiscan-utils.js";
 
+import { z } from "zod";
 interface TransferInfo {
   from_address: string | null;
   to_address: string;

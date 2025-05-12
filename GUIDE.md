@@ -1,217 +1,229 @@
-# Building Your Own MCP Server
+# Ordiscan MCP Framework Server Guide
 
-This guide walks you through the process of building your own MCP Framework server, using our Ordiscan implementation as an example.
+This guide walks you through understanding and using the Ordiscan MCP Framework server, which provides tools for interacting with the Ordiscan API to fetch Bitcoin Ordinals and Runes data.
 
 ## 1. Project Setup
 
-### Initialize Project
+### Prerequisites
+- Node.js 16 or higher
+- npm or yarn package manager
+- An Ordiscan API key
+
+### Installation
 ```bash
-mkdir your-mcp-server
-cd your-mcp-server
-npm init -y
+git clone [your-repository-url]
+cd ordiscanmcpv1
+npm install
 ```
 
-### Install Dependencies
-```bash
-npm install mcp-framework typescript zod @types/node
-npm install --save-dev ts-node nodemon
-```
-
-### Configure TypeScript
-Create `tsconfig.json`:
-```json
-{
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "strict": true,
-    "outDir": "./dist",
-    "rootDir": "./src"
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
-}
+### Environment Setup
+Create a `.env` file in the root directory:
+```env
+ORDISCAN_API_KEY=your-api-key-here
 ```
 
 ## 2. Project Structure
-
-Create the following directory structure:
 ```
-your-mcp-server/
+ordiscanmcpv1/
 ├── src/
 │   ├── tools/
-│   │   ├── your-tool-1.ts
-│   │   ├── your-tool-2.ts
-│   │   └── utils.ts
-│   └── index.ts
+│   │   ├── ordiscan.ts       # Main Ordiscan API tool
+│   │   ├── address.ts        # Address-related tools
+│   │   ├── inscription.ts    # Inscription-related tools
+│   │   ├── rune.ts          # Rune-related tools
+│   │   ├── brc20.ts         # BRC-20 token tools
+│   │   └── utils.ts         # Shared utilities
+│   └── index.ts             # Server entry point
+├── dist/                    # Compiled JavaScript files
 ├── package.json
 ├── tsconfig.json
 └── README.md
 ```
 
-## 3. Create Utility Functions
+## 3. Available Tools
 
-Create `src/tools/utils.ts` for common functionality:
+### Main Ordiscan Tool
+- `ordiscan_main`: General rune information and status
+- Parameters:
+  - `runeName`: The unique name of the rune
+  - `apiKey`: (Optional) Your Ordiscan API key
+  - `blockHeight`: (Optional) Current block height
+
+### Address Tools
+- `ordiscan_address_brc20`: Get BRC-20 token balances
+- `ordiscan_address_inscriptions`: Get inscription IDs
+- `ordiscan_address_rare_sats`: Get rare sats
+- `ordiscan_address_runes`: Get rune balances
+- `ordiscan_address_utxos`: Get UTXOs and associated data
+
+### BRC-20 Tools
+- `ordiscan_brc20_info`: Get token information
+- `ordiscan_brc20_list`: List BRC-20 tokens
+
+### Collection Tools
+- `ordiscan_collection_info`: Get collection details
+- `ordiscan_collections_list`: List indexed collections
+
+### Inscription Tools
+- `ordiscan_inscription_info`: Get inscription details
+- `ordiscan_inscription_traits`: Get inscription traits
+
+### Transaction Tools
+- `ordiscan_tx_info`: Get transaction information
+- `ordiscan_tx_inscription_transfers`: Get inscription transfers
+- `ordiscan_tx_inscriptions`: Get new inscriptions
+- `ordiscan_tx_runes`: Get minted and transferred runes
+
+### UTXO Tools
+- `ordiscan_utxo_rare_sats`: Get rare sats in UTXO
+- `ordiscan_utxo_sat_ranges`: Get sat ranges in UTXO
+
+## 4. Using the Tools
+
+### Example: Fetching Rune Information
 ```typescript
-import { z } from "zod";
-
-// Flexible number handling
-export const flexibleNumber = () => z.union([z.string(), z.number()]).optional().transform(val => {
-  if (typeof val === 'string') {
-    const num = parseInt(val, 10);
-    return isNaN(num) ? undefined : num;
-  }
-  return val;
-});
-
-// Flexible enum handling
-export const flexibleEnum = <T extends readonly string[]>(values: T) => 
-  z.string().optional().refine(val => !val || values.includes(val as T[number]), {
-    message: `Value must be one of: ${values.join(', ')}`
-  });
-```
-
-## 4. Implement Your First Tool
-
-Create a new tool in `src/tools/`:
-```typescript
-import { MCPTool } from "mcp-framework";
-import { z } from "zod";
-import { flexibleNumber } from "./utils";
-
-interface ToolInput {
-  param1: string;
-  param2?: number;
-}
-
-interface ToolResponse {
-  data: any;
-}
-
-class YourFirstTool extends MCPTool<ToolInput> {
-  name = "your_tool_name";
-  description = "Description of what your tool does";
-
-  schema = {
-    param1: {
-      type: z.string(),
-      description: "Description of param1",
-    },
-    param2: {
-      type: flexibleNumber(),
-      description: "Description of param2",
-    },
-  };
-
-  async execute(input: ToolInput) {
-    try {
-      // Your tool logic here
-      return {
-        success: true,
-        data: {/* your data */},
-        formatted: {/* formatted data */}
-      };
-    } catch (error) {
-      if (error instanceof Error) {
-        return { error: error.message };
-      }
-      return { error: 'Unknown error occurred' };
-    }
-  }
-}
-
-export default YourFirstTool;
-```
-
-## 5. Set Up Server Entry Point
-
-Create `src/index.ts`:
-```typescript
-import { MCPServer } from "mcp-framework";
-import YourFirstTool from "./tools/your-first-tool";
-
-const server = new MCPServer({
-  port: 1337,
-  cors: true
-});
-
-// Register your tools
-server.registerTool(new YourFirstTool());
-
-// Start the server
-server.start().then(() => {
-  console.log('MCP Server running on port 1337');
-}).catch(error => {
-  console.error('Failed to start server:', error);
+const response = await mcpClient.call("ordiscan_main", {
+  runeName: "example",
+  apiKey: process.env.ORDISCAN_API_KEY
 });
 ```
 
-## 6. Add NPM Scripts
+### Example: Getting Address Balances
+```typescript
+const response = await mcpClient.call("ordiscan_address_brc20", {
+  address: "bc1...",
+  apiKey: process.env.ORDISCAN_API_KEY
+});
+```
 
-Update `package.json`:
-```json
-{
-  "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "nodemon --exec ts-node src/index.ts"
+## 5. Error Handling
+
+All tools implement comprehensive error handling:
+```typescript
+try {
+  const response = await tool.execute(input);
+  if (response.error) {
+    console.error('Tool execution failed:', response.error);
+    return;
   }
+  console.log('Success:', response.data);
+} catch (error) {
+  console.error('Unexpected error:', error);
 }
 ```
 
-## 7. Best Practices
+## 6. Development
 
-### Error Handling
-- Always wrap API calls in try/catch blocks
-- Return structured error messages
-- Include both raw and formatted data in responses
-- Validate all inputs using Zod schemas
-
-### Type Safety
-- Use TypeScript interfaces for all data structures
-- Implement proper type checking
-- Use utility functions for common operations
-
-### Code Organization
-- Keep files under 500 lines
-- Group related tools in directories
-- Use consistent naming conventions
-- Document all parameters and return types
-
-### Testing
-- Write unit tests for each tool
-- Test edge cases and error conditions
-- Validate response formats
-- Test parameter validation
-
-## 8. Running Your Server
-
-### Development Mode
+### Running in Development Mode
 ```bash
 npm run dev
 ```
 
-### Production Mode
+### Building for Production
 ```bash
 npm run build
 npm start
 ```
 
-## 9. Documentation
+### Running Tests
+```bash
+npm test
+```
 
-Create comprehensive documentation including:
-- Tool descriptions and parameters
-- Example requests and responses
-- Error handling guidelines
-- Setup instructions
-- API authentication if required
+## 7. Best Practices
 
-## 10. Maintenance
+### API Key Management
+- Never commit API keys to version control
+- Use environment variables for sensitive data
+- Implement API key rotation if needed
 
-- Keep dependencies updated
-- Monitor server performance
-- Log errors and usage metrics
-- Implement proper security measures
-- Regular code reviews and updates 
+### Rate Limiting
+- Respect Ordiscan API rate limits
+- Implement caching where appropriate
+- Add retry logic for failed requests
+
+### Error Handling
+- Validate all inputs using Zod schemas
+- Handle API-specific error codes
+- Provide meaningful error messages
+
+### Type Safety
+- Use TypeScript interfaces for API responses
+- Implement proper type checking
+- Use utility types for common patterns
+
+## 8. Deployment
+
+### Local Development
+```bash
+npm run dev
+```
+
+### Production Deployment
+1. Build the project:
+```bash
+npm run build
+```
+
+2. Start the server:
+```bash
+npm start
+```
+
+3. Configure your MCP client:
+```json
+{
+  "mcpServers": {
+    "ordiscanmcpv1": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://your-deployed-server.com/mcp"
+      ],
+      "env": {
+        "ORDISCAN_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
+## 9. Troubleshooting
+
+### Common Issues
+1. API Key Issues
+   - Verify API key is set in environment
+   - Check API key permissions
+   - Ensure key is properly formatted
+
+2. Connection Issues
+   - Verify server is running
+   - Check network connectivity
+   - Confirm port availability
+
+3. Type Errors
+   - Update TypeScript definitions
+   - Check input validation
+   - Verify API response types
+
+### Getting Help
+- Check the [Ordiscan API Documentation](https://docs.ordiscan.com)
+- Review GitHub Issues
+- Contact support team
+
+## 10. Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+Please follow our coding standards:
+- Use TypeScript
+- Add comprehensive tests
+- Document all changes
+- Follow ESLint rules
+
+## 11. License
+
+This project is licensed under the MIT License - see the LICENSE file for details. 

@@ -1,7 +1,7 @@
 import { MCPTool } from "mcp-framework";
-import { z } from "zod";
-import { flexibleNumber } from "./ordiscan-utils";
+import { flexibleNumber, flexibleEnum } from "./ordiscan-utils.js";
 
+import { z } from "zod";
 interface OrdiscanInput {
   runeName: string;
   apiKey?: string;
