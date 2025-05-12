@@ -1,9 +1,7 @@
 import { MCPTool } from "mcp-framework";
-import { flexibleNumber, flexibleEnum } from "./ordiscan-utils.js";
+import { flexibleNumber, flexibleEnum } from "../utils/ordiscan-utils.js";
 
 import { z } from "zod";
-import utils from "./ordiscan-utils.js";
-
 // Define interfaces for the tool's input and response types
 interface OrdiscanRunesActivityInput {
   address: string;

@@ -20,8 +20,8 @@ export const flexibleEnum = <T extends readonly string[]>(values: T) =>
     message: `Value must be one of: ${values.join(', ')}`
   }); 
 
-// Add a default export that includes all utility functions
-const utils = {
+// Export utility functions
+export const utils = {
   flexibleNumber,
   flexibleEnum
 };

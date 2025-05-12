@@ -1,5 +1,5 @@
 import { MCPTool } from "mcp-framework";
-import { flexibleNumber, flexibleEnum } from "./ordiscan-utils.js";
+import { flexibleNumber, flexibleEnum } from "../utils/ordiscan-utils.js";
 
 import { z } from "zod";
 interface OrdiscanInput {
