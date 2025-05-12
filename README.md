@@ -57,7 +57,7 @@ npm run build
   }
 }
 ```
-url: (http://localhost:1337/mcp)
+url: (http://localhost:1337/mcp) Remote: (https://ordiscan-mcp-v1.onrender.com/mcp)
 
 4. Start the server:
 ```bash
