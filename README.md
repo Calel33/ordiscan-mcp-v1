@@ -2,6 +2,8 @@
 
 An MCP Framework HTTP server implementation with Ordiscan API integration.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## Features
 
 - HTTP Stream transport on port 1337

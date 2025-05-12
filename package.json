@@ -4,6 +4,7 @@
   "description": "MCP Framework HTTP Server",
   "type": "module",
   "main": "dist/index.js",
+  "license": "MIT",
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
