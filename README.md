@@ -43,15 +43,21 @@ npm install
 ```bash
 npm run build
 ```
-
-3. Set up environment variables:
-```bash
-# Linux/macOS
-export ORDISCAN_API_KEY=your-api-key-here
-
-# Windows PowerShell
-$env:ORDISCAN_API_KEY="your-api-key-here"
+3. Configure your MCP client:
+```json
+{
+  "mcpServers": {
+    "ordiscanmcpv1": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://your-deployed-server.com/mcp"   (local host 1337)
+      ],
+    }
+  }
+}
 ```
+
 
 4. Start the server:
 ```bash
@@ -62,6 +68,7 @@ For development with hot-reload:
 ```bash
 npm run dev
 ```
+Pass in the key with a request one time, good to go.
 
 ## Project Structure
 
