@@ -5,13 +5,13 @@ An MCP Framework HTTP server implementation with Ordiscan API integration.
 ## Features
 
 - HTTP Stream transport on port 1337
-- CORS enabled for all origins
 - Stream response mode for real-time communication
-- Comprehensive Ordiscan API integration
+- Comprehensive Ordiscan API integration (29 tools)
 - TypeScript implementation with Zod schema validation
 - Detailed error handling and response formatting
 - Direct API connection (no proxy required)
 - Bearer token authentication
+- Rate limiting handled by Ordiscan API
 
 ## API Connection & Authentication
 
@@ -21,6 +21,7 @@ All tools connect directly to the Ordiscan API (`api.ordiscan.com`) without requ
 - Reduced latency
 - No additional configuration needed
 - Direct error handling
+- Automatic rate limiting by Ordiscan API
 
 ### Authentication
 Every tool requires authentication using a Bearer token:
@@ -69,14 +70,15 @@ ordiscanmcpv1/
 ├── src/
 │   ├── tools/
 │   │   ├── ordiscan-utils.ts
+│   │   ├── ordiscan.ts            # Main Ordiscan Tool
 │   │   │
 │   │   ├── # Address Tools
-│   │   ├── ordiscan-address-utxo.ts
-│   │   ├── ordiscan-address-inscriptions.ts
-│   │   ├── ordiscan-address-inscriptions-detail.ts
-│   │   ├── ordiscan-address-runes-balance.ts
-│   │   ├── ordiscan-address-brc20-balance.ts
-│   │   ├── ordiscan-address-rare-sats.ts
+│   │   ├── ordiscan-utxo.ts
+│   │   ├── ordiscan-inscriptions.ts
+│   │   ├── ordiscan-inscriptions-detail.ts
+│   │   ├── ordiscan-runes-balance.ts
+│   │   ├── ordiscan-brc20-balance.ts
+│   │   ├── ordiscan-rare-sats.ts
 │   │   │
 │   │   ├── # Activity Tools
 │   │   ├── ordiscan-inscriptions-activity.ts
@@ -84,10 +86,10 @@ ordiscanmcpv1/
 │   │   ├── ordiscan-brc20-activity.ts
 │   │   │
 │   │   ├── # Transaction Tools
-│   │   ├── ordiscan-transaction-info.ts
-│   │   ├── ordiscan-transaction-inscriptions.ts
-│   │   ├── ordiscan-inscription-transfers.ts
-│   │   ├── ordiscan-transaction-runes.ts
+│   │   ├── ordiscan-tx-info.ts
+│   │   ├── ordiscan-tx-inscriptions.ts
+│   │   ├── ordiscan-tx-inscription-transfers.ts
+│   │   ├── ordiscan-tx-runes.ts
 │   │   │
 │   │   ├── # Inscription Tools
 │   │   ├── ordiscan-inscription-info.ts
@@ -138,47 +140,50 @@ All tools use robust parameter handling utilities from `ordiscan-utils.ts`:
 
 These utilities ensure consistent parameter handling across all tools while maintaining type safety and validation.
 
-## Available Tools
+## Available Tools (29 Total)
 
-### Address Tools
+### 1. Main Tool
+- **ordiscan_main**: General-purpose tool for rune information and status
+
+### 2. Address Tools (6)
 - **UTXO Tool**: Get all UTXOs owned by a Bitcoin address
 - **Basic and Detailed Inscription Tools**: Get inscription information for an address
 - **Runes Balance Tool**: Get rune balances for an address
 - **BRC-20 Balance Tool**: Get BRC-20 token balances for an address
 - **Rare Sats Tool**: Get rare sats owned by an address
 
-### Activity Tracking Tools
+### 3. Activity Tools (3)
 - **Inscriptions Activity Tool**: Track inscription transfers for an address
 - **Runes Activity Tool**: Track rune transfers for an address
 - **BRC-20 Activity Tool**: Track BRC-20 token transfers for an address
 
-### Transaction Tools
+### 4. Transaction Tools (4)
 - **Transaction Info Tool**: Get detailed transaction information
 - **Transaction Inscriptions Tool**: Get inscriptions in a transaction
 - **Transaction Inscription Transfers Tool**: Track inscription transfers in a transaction
 - **Transaction Runes Tool**: Track rune transfers in a transaction
 
-### Inscription Tools
+### 5. Inscription Tools (4)
 - **Inscription Info Tool**: Get detailed information about an inscription
 - **Inscription Traits Tool**: Get traits for an inscription
 - **Inscriptions List Tool**: Get a paginated list of all inscriptions
 - **Inscription Transfers Tool**: Track transfers of an inscription
 
-### Collection Tools
+### 6. Collection Tools (3)
 - **Collections List Tool**: Get a paginated list of collections
 - **Collection Info Tool**: Get detailed information about a collection
 - **Collection Inscriptions Tool**: Get inscriptions in a collection
 
-### Rune Tools
+### 7. Rune Tools (3)
 - **Runes List Tool**: Get a list of all runes
 - **Rune Market Info Tool**: Get market information for a rune
 - **Rune Name Unlock Tool**: Check rune name availability
 
-### BRC-20 Tools
+### 8. BRC-20 Tools (2)
 - **BRC-20 List Tool**: Get a list of all BRC-20 tokens
 - **BRC-20 Token Info Tool**: Get detailed information about a BRC-20 token
 
-### Sat Tools
+### 9. Sat Tools (3)
 - **Sat Info Tool**: Get information about a specific sat
 - **UTXO Rare Sats Tool**: Get rare sats in a UTXO
 - **UTXO Sat Ranges Tool**: Get sat ranges in a UTXO
@@ -283,7 +288,7 @@ All tools include comprehensive error handling:
 - API key validation
 - Network request errors
 - Invalid input validation
-- Rate limiting handling
+- Rate limiting responses from Ordiscan API
 - Detailed error messages
 
 ## Response Formatting
@@ -302,13 +307,6 @@ Each tool provides both raw and formatted responses:
 - Rotate API keys periodically
 - Use different API keys for development and production
 
-### Rate Limiting
-Consider implementing rate limiting to:
-- Prevent API abuse
-- Manage resource usage
-- Protect against DDoS attacks
-- Comply with upstream API limits
-
 ### Error Handling
 The server implements secure error handling:
 - No sensitive information in error messages
@@ -323,10 +321,9 @@ All tools use strict input validation:
 - Flexible number handling for numeric inputs
 - String validation for enumerated values
 
-### Monitoring
-Consider implementing:
-- Request logging
-- Error tracking
-- Usage metrics
-- Performance monitoring
-- Security event logging
+### Rate Limiting
+Rate limiting is handled by the Ordiscan API:
+- No additional rate limiting needed
+- API key-based rate limits
+- Proper error responses for rate limit exceeded
+- Automatic rate limit handling
