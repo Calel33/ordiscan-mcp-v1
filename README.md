@@ -51,13 +51,13 @@ npm run build
       "command": "npx",
       "args": [
         "mcp-remote",
-        "https://your-deployed-server.com/mcp"   (local host 1337)
-      ],
+        "https://your-deployed-server.com/mcp"  
+      ]
     }
   }
 }
 ```
-
+url: (http://localhost:1337/mcp)
 
 4. Start the server:
 ```bash
