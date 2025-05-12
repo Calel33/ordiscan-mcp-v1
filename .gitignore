@@ -1,0 +1,87 @@
+# Dependencies
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+.tsc/
+*.js.map
+*.d.ts
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# Operating System
+.DS_Store
+Thumbs.db
+.directory
+Desktop.ini
+$RECYCLE.BIN/
+
+# Debug logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Test coverage
+coverage/
+.nyc_output/
+junit.xml
+test-report.xml
+
+# Temporary files
+tmp/
+temp/
+.temp/
+.tmp/
+*.tmp
+*.temp
+
+# TypeScript specific
+*.tsbuildinfo
+.tscache/
+tsconfig.tsbuildinfo
+
+# Jest
+jest.config.js.map
+/coverage/
+/.jest/
+
+# Cursor specific
+.cursor/
+.cursor-cache/
+
+# MCP Framework specific
+mcp.log
+mcp-debug.log
+.mcp-cache/
+
+# Project specific
+ordiscan-api-key.txt
+.ordiscan-cache/ 
