@@ -1,4 +1,26 @@
 version: 1
+startCommand:
+  type: http
+  configSchema:
+    type: object
+    properties:
+      port:
+        type: number
+        title: "Port"
+        description: "The port number for the MCP server to listen on"
+        default: 1337
+      endpoint:
+        type: string
+        title: "MCP Endpoint"
+        description: "The endpoint path for MCP requests"
+        default: "/mcp"
+      responseMode:
+        type: string
+        title: "Response Mode"
+        description: "The response mode for the server"
+        enum: ["stream"]
+        default: "stream"
+    required: []
 start:
   command: ["npm", "start"]
   port: 1337 
