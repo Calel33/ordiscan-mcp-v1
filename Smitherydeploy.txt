@@ -1,0 +1,75 @@
+# Ordiscan MCP API Deployment Guide
+
+This file contains instructions for deploying the Ordiscan MCP API with lazy loading.
+
+## Deployment Environment Variables
+
+Make sure to set the following environment variables in your deployment environment:
+
+- `PORT`: The port to run the server on (automatically set by most cloud platforms)
+- `ORDISCAN_API_KEY`: Your Ordiscan API key for authentication (optional, can be passed per request)
+
+## Deployment Steps
+
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Build the project: `npm run build`
+4. Start the server: `npm start`
+
+## Cloud Platform Deployment
+
+### Render
+
+1. Create a new Web Service
+2. Connect your repository
+3. Set the build command to: `npm install && npm run build`
+4. Set the start command to: `npm start`
+5. Add the `ORDISCAN_API_KEY` environment variable (optional)
+
+### Heroku
+
+1. Create a new app
+2. Connect your repository
+3. Set the buildpack to Node.js
+4. Add the `ORDISCAN_API_KEY` environment variable (optional)
+5. Deploy the app
+
+### Digital Ocean App Platform
+
+1. Create a new app
+2. Connect your repository
+3. Set the build command to: `npm install && npm run build`
+4. Set the run command to: `npm start`
+5. Add the `ORDISCAN_API_KEY` environment variable (optional)
+
+## Using with MCP Clients
+
+To use with Claude Desktop or other MCP clients, add the following configuration:
+
+```json
+{
+  "mcpServers": {
+    "ordiscanmcpv1": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://your-deployed-server-url/mcp"
+      ]
+    }
+  }
+}
+```
+
+Replace `https://your-deployed-server-url/mcp` with your actual deployment URL.
+
+## Performance Considerations
+
+- The lazy loading implementation will significantly reduce memory usage and startup time
+- The server will only load tools when they are requested
+- Consider setting the `preloadTools` array in index.ts to include your most frequently used tools for faster first-time access
+
+## Troubleshooting
+
+- If you encounter "Module not found" errors, ensure that your deployment process is correctly building the TypeScript files
+- If tools are not loading, check the server logs for errors and ensure the file paths in tool-registry.ts are correct
+- If authentication issues occur, verify that your Ordiscan API key is correctly set

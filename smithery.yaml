@@ -23,4 +23,4 @@ startCommand:
     required: []
 start:
   command: ["npm", "start"]
-  port: 1337 
+  port: process.env.PORT || 1337 
