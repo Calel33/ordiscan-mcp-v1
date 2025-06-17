@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/calel33-ordiscan-mcp-v1-badge.png)](https://mseep.ai/app/calel33-ordiscan-mcp-v1)
+
 # OrdiscanMCP v1
 
 An MCP Framework HTTP server implementation with Ordiscan API integration.
